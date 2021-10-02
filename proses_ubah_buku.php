@@ -12,6 +12,15 @@ include 'koneksi.php';
     $name= rand(0,9999).$_FILES['foto']['name'];
     $folder = 'foto/';
 
+    $sql = "select * from buku where id_buku = '$id_buku'";
+    $query = mysqli_query($koneksi, $sql);
+    $buku= mysqli_fetch_array($query);
+    $path = $folder.$buku["foto"];
+
+    if (file_exists($path)) {
+        unlink($path);
+    }
+
     if ($size < 999999999999 and ($type == "image/png" or $type == "image/jpg" or $type == "image/jpeg")) {
         move_uploaded_file($temp, $folder . $name);
         $update=mysqli_query($koneksi,"update buku set nama_buku='".$nama_buku."', pengarang='".$pengarang."', deskripsi='".$deskripsi."', foto='".$name."' where id_buku = '".$id_buku."'") or die(mysqli_error($koneksi));
